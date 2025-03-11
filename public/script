@@ -1,4 +1,4 @@
- interface Filme{
+  interface Filme{
     id: number;
     titulo: string;
     diretor: string;
@@ -16,6 +16,7 @@ async function buscarFilme(): Promise<Filme[]> {
     }
     return response.json();
 }
+
 // mostrar os filmes na tela 
 async function renderizarFilmes(){
     try {
@@ -23,17 +24,56 @@ async function renderizarFilmes(){
         const lista = document.getElementById('lista-filmes')as HTMLAreaElement
         lista.innerHTML = '';
 
-        filmes.forEach((filmes) =>{
+        filmes.forEach((filme) =>{
             const item = document.createElement('li');
-            item.textContent = '${ filmes.titulo} - ${ filmes.diretor} - ${filmes.genero} - ${filmes.ano}';
+            item.textContent = '${ filme.titulo} - ${ filme.diretor} - ${filme.genero} - ${filme.ano}';
 
+            const btnDeletar = document.createElement('button');
+            btnDeletar.textContent = 'Deletar';
+            btnDeletar.style.marginLeft = 'px';
+            btnDeletar.addEventListener("click", () =>deletarFilme(filme.id));
+
+            item.appendChild(btnDeletar);
+            lista.appendChild(item);
         });
-
 
         
     } catch (error) {
-        
+        console.error(erro)
     }
+    
+    }
+//cadastrar todos os filmes
+async function cadastrarFilme(filme:Omit<Filme, "id">) {
+    const response = await fetch(apiURL,{
+        method: "POST",
+        headers: {"content-Type": "application/json"}
+        body: JSON.stringify(filme),
+    });
+
+    if(!response.ok){
+        throw new Error ( "Erro ao cadastrar o filme")
+    }
+
+    await renderizarFilmes();
+}
+
+//deletar um filme
+async function deletarFilme(id:number) {
+    const response =  await fetch(´${apiURL}/${id}´,{method:"DELETE"});
+
+    if(!response.ok){
+        throw new Error("Erro ao deletar o filme.")
+    }
+     await renderizarFilmes();
+}
+//Evento para o botao de submeter o formulario
+const formFilme = document.getElementById  ("form-filme") as HTMLAnchorElement;
+formFilme.addEventListener("submit", async (Event) =>{
+
+    const  titulo = (document.getElementById ( "titulo")  as HTML InputElement).value;
+ });
+
     
 }
 //cadastrar todos os filmes
