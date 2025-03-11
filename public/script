@@ -1,81 +1,82 @@
-  interface Filme{
-    id: number;
-    titulo: string;
-    diretor: string;
-    genero: string;
-    ano: number;
- }
-const apiURL = 'http://localhost:3000';
-
-//Buscar todos os filmes 
-async function buscarFilme(): Promise<Filme[]> {
-    const response = await fetch(apiURL);
-    if( !response.ok)
-    {
-        throw new Error('Erro ao buscar filme');
-    }
-    return response.json();
-}
-
-// mostrar os filmes na tela 
-async function renderizarFilmes(){
-    try {
-        const filmes = await buscarFilme();
-        const lista = document.getElementById('lista-filmes')as HTMLAreaElement
-        lista.innerHTML = '';
-
-        filmes.forEach((filme) =>{
-            const item = document.createElement('li');
-            item.textContent = '${ filme.titulo} - ${ filme.diretor} - ${filme.genero} - ${filme.ano}';
-
-            const btnDeletar = document.createElement('button');
-            btnDeletar.textContent = 'Deletar';
-            btnDeletar.style.marginLeft = 'px';
-            btnDeletar.addEventListener("click", () =>deletarFilme(filme.id));
-
-            item.appendChild(btnDeletar);
-            lista.appendChild(item);
-        });
-
-        
-    } catch (error) {
-        console.error(erro)
-    }
-    
-    }
-//cadastrar todos os filmes
-async function cadastrarFilme(filme:Omit<Filme, "id">) {
-    const response = await fetch(apiURL,{
-        method: "POST",
-        headers: {"content-Type": "application/json"}
-        body: JSON.stringify(filme),
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-
-    if(!response.ok){
-        throw new Error ( "Erro ao cadastrar o filme")
-    }
-
-    await renderizarFilmes();
+};
+const apiURL = 'http://localhost:3000';
+//Buscar todos os filmes 
+function buscarFilme() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch(apiURL);
+        if (!response.ok) {
+            throw new Error('Erro ao buscar filme');
+        }
+        return response.json();
+    });
 }
-
+// mostrar os filmes na tela 
+function renderizarFilmes() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const filmes = yield buscarFilme();
+            const lista = document.getElementById('lista-filmes');
+            lista.innerHTML = '';
+            filmes.forEach((filme) => {
+                const item = document.createElement('li');
+                item.textContent = '${ filme.titulo} - ${ filme.diretor} - ${filme.genero} - ${filme.ano}';
+                const btnDeletar = document.createElement('button');
+                btnDeletar.textContent = 'Deletar';
+                btnDeletar.style.marginLeft = 'px';
+                btnDeletar.addEventListener("click", () => deletarFilme(filme.id));
+                item.appendChild(btnDeletar);
+                lista.appendChild(item);
+            });
+        }
+        catch (error) {
+            console.error(erro);
+        }
+    });
+}
+//cadastrar todos os filmes
+function cadastrarFilme(filme) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch(apiURL, {
+            method: "POST",
+            headers: { "content-Type": "application/json" },
+            body: JSON.stringify(filme),
+        });
+        if (!response.ok) {
+            throw new Error("Erro ao cadastrar o filme");
+        }
+        yield renderizarFilmes();
+    });
+}
 //deletar um filme
-async function deletarFilme(id:number) {
-    const response =  await fetch(´${apiURL}/${id}´,{method:"DELETE"});
-
-    if(!response.ok){
-        throw new Error("Erro ao deletar o filme.")
-    }
-     await renderizarFilmes();
+function deletarFilme(id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch($, { apiURL } / $, { id }, { method: "DELETE" });
+        if (!response.ok) {
+            throw new Error("Erro ao deletar o filme.");
+        }
+        yield renderizarFilmes();
+    });
 }
 //Evento para o botao de submeter o formulario
-const formFilme = document.getElementById  ("form-filme") as HTMLAnchorElement;
-formFilme.addEventListener("submit", async (Event) =>{
-
-    const  titulo = (document.getElementById ( "titulo")  as HTML InputElement).value;
- });
-
-    
+const formFilme = document.getElementById("form-filme");
+formFilme.addEventListener("submit", (Event) => __awaiter(void 0, void 0, void 0, function* () {
+    const titulo = document.getElementById("titulo"), InputElement;
+})).value;
+const diretor = (document.getElementById("diretor"), InputElement). value;
+const genero = (document.getElementById("genero"), InputElement).value;
+const ano = parseInt(document.getElementById("ano"), InputElement).value;
+if (titulo && diretor && genero && ano) {
+    await cadastrarFilme({ titulo, diretor, genero, ano });
+    formFilme.reset();
 }
-//cadastrar todos os filmes
-
-//deletar um filme
+;
+document.addEventListener("DOMContentLoaded", renderizarFilmes);
